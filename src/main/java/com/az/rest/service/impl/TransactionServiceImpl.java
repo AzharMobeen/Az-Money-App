@@ -106,7 +106,6 @@ public class TransactionServiceImpl implements TransactionService{
 				if(connection!=null)
 					connection.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				log.error(e.toString());
 			}
 		}				
