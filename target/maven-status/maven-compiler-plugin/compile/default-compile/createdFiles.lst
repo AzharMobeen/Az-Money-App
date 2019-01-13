@@ -1,6 +1,4 @@
-com\az\rest\dao\AbstractDAOFactory.class
 com\az\rest\dao\impl\TransactionDAOImpl.class
-com\az\rest\dao\impl\ManagerDAOFactory.class
 com\az\rest\service\impl\AccountServiceImpl.class
 com\az\rest\resource\UserResource.class
 com\az\rest\dao\impl\AccountDAOImpl.class

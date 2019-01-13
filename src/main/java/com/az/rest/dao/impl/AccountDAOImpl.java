@@ -33,14 +33,14 @@ public class AccountDAOImpl implements AccountDAO {
 		ResultSet resultSet = null;
 		List<Account> accountList= new ArrayList<>();
 		try {
-			connection = ManagerDAOFactory.getConnection();
+			connection = ManagerDAO.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM Account";
 			resultSet = statement.executeQuery(sql);
 			
 			while(resultSet.next()) {
 				Account account = new Account(resultSet.getLong("ACCOUNTID"), resultSet.getString("IBAN"),
-						resultSet.getString("ACCOUNT_HOLDER"), resultSet.getString("ACCOUNT_TYPE"),resultSet.getBigDecimal("BALANCE"));
+						resultSet.getLong("USERID"), resultSet.getString("ACCOUNT_TYPE"),resultSet.getBigDecimal("BALANCE"));
 				accountList.add(account);
 			}
 			
@@ -70,14 +70,14 @@ public class AccountDAOImpl implements AccountDAO {
 		ResultSet resultSet = null;
 		Account account = null;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "SELECT * FROM Account WHERE ACCOUNTID =?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
 			resultSet = statement.executeQuery();			
 			if(resultSet.next()) {
 				account = new Account(resultSet.getLong("ACCOUNTID"), resultSet.getString("IBAN"),
-						resultSet.getString("ACCOUNT_HOLDER"), resultSet.getString("ACCOUNT_TYPE"),resultSet.getBigDecimal("BALANCE"));				
+						resultSet.getLong("USERID"), resultSet.getString("ACCOUNT_TYPE"),resultSet.getBigDecimal("BALANCE"));				
 			}
 			
 			resultSet.close();
@@ -105,11 +105,11 @@ public class AccountDAOImpl implements AccountDAO {
 		PreparedStatement statement = null;		
 		ResultSet resultSet = null;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
-			String sql = "INSERT INTO Account (IBAN, ACCOUNT_HOLDER, ACCOUNT_TYPE, BALANCE) VALUES(?,?,?,?)";
+			connection = ManagerDAO.getConnection();			
+			String sql = "INSERT INTO Account (IBAN, USERID, ACCOUNT_TYPE, BALANCE) VALUES(?,?,?,?)";
 			statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, account.getIBAN());
-			statement.setString(2, account.getAccountHolder());
+			statement.setLong(2, account.getUserId());
 			statement.setString(3, account.getAccountType());
 			statement.setBigDecimal(4, account.getBalance());
 			int insertion = statement.executeUpdate();	
@@ -137,88 +137,15 @@ public class AccountDAOImpl implements AccountDAO {
 	         }
 		}		
 		return account;
-	}
+	}	
 	
-	/*
-	 * Balance and IBAN update not allowed here
-	 * */
-	public boolean updateAccount(Account account) {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		boolean updateFlag = true;
-		try {
-			connection = ManagerDAOFactory.getConnection();			
-			String sql = "UPDATE Account SET ACCOUNT_HOLDER = ? , ACCOUNT_TYPE = ? WHERE ACCOUNTID = ?";
-			statement = connection.prepareStatement(sql);			
-			statement.setString(1, account.getAccountHolder());
-			statement.setString(2, account.getAccountType());
-			statement.setLong(3, account.getAccountId());
-			int insertion = statement.executeUpdate();	
-			
-			if(insertion!=1) {
-				updateFlag = false;
-			}
-			
-			statement.close(); 
-	        connection.close();
-		}catch (Exception e) {
-			log.error(e.toString());
-		}finally {
-			try{ 
-	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
-	         } 
-	         try { 
-	            if(connection!=null) connection.close(); 
-	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
-	         }
-		}		
-		return updateFlag;
-	}
-
-	public boolean deleteAccount(long id) {
-		Connection connection = null;
-		PreparedStatement statement = null;		
-		boolean deleteFlag = true;
-		try {
-			connection = ManagerDAOFactory.getConnection();			
-			String sql = "DELETE FROM Account WHERE ACCOUNTID = ?";
-			statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);			
-			int effectedRow = statement.executeUpdate();	
-			
-			if(effectedRow!=1) {
-				deleteFlag = false;
-			}
-			
-			statement.close(); 
-	        connection.close();
-		}catch (Exception e) {
-			log.error(e.toString());
-		}finally {
-			try{ 
-	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
-	         } 
-	         try { 
-	            if(connection!=null) connection.close(); 
-	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
-	         }
-		}		
-		return deleteFlag;		
-	}
-
 	public boolean checkIBANAvailable(String IBAN) {
 		boolean checkIBAN = true;
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;		
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = " SELECT * FROM Account WHERE IBAN = ? ";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, IBAN);
@@ -248,7 +175,7 @@ public class AccountDAOImpl implements AccountDAO {
 	}
 
 	/*
-	 * Account will be lock for balance updat
+	 * Account will be lock for balance update
 	 * 
 	 * */
 	public Account getAccountByIBANForUpdateBalance(Connection connection,String IBAN) {
@@ -261,7 +188,7 @@ public class AccountDAOImpl implements AccountDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()) {
 				account = new Account(resultSet.getLong("ACCOUNTID"), resultSet.getString("IBAN"), 
-						resultSet.getString("ACCOUNT_HOLDER"), resultSet.getString("ACCOUNT_TYPE"), 
+						resultSet.getLong("USERID"), resultSet.getString("ACCOUNT_TYPE"), 
 						resultSet.getBigDecimal("BALANCE"));
 			}
 			resultSet.close();				
@@ -299,4 +226,42 @@ public class AccountDAOImpl implements AccountDAO {
 		return updateFlag;
 	}
 
+	public List<Account> getUserAccountList(long userId) {
+		Connection connection = null;
+		PreparedStatement  statement = null;
+		ResultSet resultSet = null;
+		List<Account> accountList= new ArrayList<>();
+		try {
+			connection = ManagerDAO.getConnection();			
+			String sql = "SELECT * FROM Account WHERE USERID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setLong(1, userId);
+			
+			resultSet = statement.executeQuery(sql);
+			
+			while(resultSet.next()) {
+				Account account = new Account(resultSet.getLong("ACCOUNTID"), resultSet.getString("IBAN"),
+						resultSet.getLong("USERID"), resultSet.getString("ACCOUNT_TYPE"),resultSet.getBigDecimal("BALANCE"));
+				accountList.add(account);
+			}
+			
+			resultSet.close();
+			statement.close(); 
+	        connection.close();
+		}catch (Exception e) {
+			log.error(e.toString());
+		}finally {
+			try{ 
+	            if(statement!=null) statement.close(); 
+	         } catch(SQLException se2) { 
+	        	 this.log.error(se2.toString());
+	         } 
+	         try { 
+	            if(connection!=null) connection.close(); 
+	         } catch(SQLException se){ 
+	        	 this.log.error(se.toString()); 
+	         }
+		}
+		return accountList;
+	}
 }

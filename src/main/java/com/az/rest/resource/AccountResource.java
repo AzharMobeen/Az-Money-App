@@ -4,10 +4,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,16 +15,18 @@ import javax.ws.rs.core.Response.Status;
 
 import com.az.rest.model.Account;
 import com.az.rest.service.AccountService;
-import com.az.rest.service.impl.AccountServiceImpl;
+import com.az.rest.service.impl.ManagerService;
 
 @Path("/accounts")
 public class AccountResource {
-
+	
+	private ManagerService managerService;
 	private AccountService accountService;
 	
 	@PostConstruct
 	public void init() {
-		accountService = AccountServiceImpl.getInstance();
+		managerService = ManagerService.getInstance();
+		accountService = managerService.getAccountService();
 	}
 	
 	@GET
@@ -55,26 +55,5 @@ public class AccountResource {
 			return Response.status(Status.CREATED).entity("Successfully Created").build();
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Not Acceptable because IBAN already exist").build();
-	}
-
-	@PUT
-	@Path("/account/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") long id, Account account) {
-		boolean updateFlag = accountService.updateAccount(id,account);
-		if(updateFlag)
-			return Response.status(Status.ACCEPTED).entity("Successfully Updated").build();
-		else
-			return Response.status(Status.NOT_MODIFIED).entity("Modification not allowed").build();
-	}
-
-	@DELETE
-	@Path("/account/{id}")
-	public Response delete(@PathParam("id") long id) {
-		boolean deleteFlag = accountService.deleteAccount(id);
-		if(deleteFlag)
-			return Response.status(Status.ACCEPTED).entity("Successfully Deleted").build();
-		else
-			return Response.status(Status.NOT_FOUND).entity("Id not found").build();
-	}
+	}	
 }

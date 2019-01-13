@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.az.rest.dao.AccountDAO;
 import com.az.rest.dao.TransactionDAO;
-import com.az.rest.dao.impl.ManagerDAOFactory;
+import com.az.rest.dao.impl.ManagerDAO;
 import com.az.rest.model.Account;
 import com.az.rest.model.Transaction;
 import com.az.rest.service.TransactionService;
@@ -22,21 +22,20 @@ public class TransactionServiceImpl implements TransactionService{
 	Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
 	
 	private static TransactionServiceImpl transactionService;	
-	private final ManagerDAOFactory managerDAOFactory;
+	private final ManagerDAO managerDAO;
 	private final AccountDAO accountDAO;
 	private final TransactionDAO transactionDAO;
 	
 	private TransactionServiceImpl() {
-		managerDAOFactory = ManagerDAOFactory.getInstance();
-		accountDAO = managerDAOFactory.getAccountDAO();
-		transactionDAO = managerDAOFactory.getTransactionDAO();	
+		managerDAO = ManagerDAO.getInstance();
+		accountDAO = managerDAO.getAccountDAO();
+		transactionDAO = managerDAO.getTransactionDAO();	
 	}
 	
 	public static TransactionServiceImpl getInstance() {
 		
 		if(transactionService==null)
-			transactionService = new TransactionServiceImpl();
-		
+			transactionService = new TransactionServiceImpl();		
 		return transactionService;
 	}
 
@@ -53,15 +52,10 @@ public class TransactionServiceImpl implements TransactionService{
 			//Both IBAN (FromIBAN and ToIBAN) should be different
 			if(!transaction.getFromIBAN().equals(transaction.getToIBAN())) {
 				
-				connection = ManagerDAOFactory.getConnection();
+				connection = ManagerDAO.getConnection();
 				connection.setAutoCommit(false);
 				fromAccount = accountDAO.getAccountByIBANForUpdateBalance(connection,transaction.getFromIBAN());
-				fromAccount.setAccountHolder("Testing");
-				
-				
-				
-				if(accountDAO.updateAccount(fromAccount))
-					System.out.println("<<<<:::::: Update Done :::::::>>>>");
+								
 				// Account must have balance more than transaction amount  
 				if(fromAccount!=null && fromAccount.getBalance().compareTo(transaction.getAmount())>0) {				
 					
@@ -112,43 +106,13 @@ public class TransactionServiceImpl implements TransactionService{
 		return response;
 	}
 	
-	@Override
 	public List<Transaction> getAllTransactions() {
 		return transactionDAO.getAllTransaction();
 	}
-	/*
-	@Override
+	
 	public Transaction getTransactionById(long id) {
-
-		return transactionList.stream().filter(transaction -> transaction.getTransactionId().equals(id)).findAny().orElse(null);
+		return transactionDAO.getTransactionById(id);
 	}
-
-	@Override
-	public Transaction createTransaction(Transaction transaction) {
-
-		if (!transactionList.stream().anyMatch(tempTransaction -> tempTransaction.getTransactionId().equals(transaction.getTransactionId()))) {
-			transactionList.add(transaction);
-			return transaction;
-		} else
-			return null;
-	}
-
-	@Override
-	public boolean updateTransaction(Transaction transaction) {
-
-		transactionList.forEach(tempTransaction-> {
-			if (tempTransaction.getTransactionId().equals(transaction.getTransactionId())) {
-				// update properties
-			}
-		});
-		return transactionList.stream().anyMatch(tempTransaction -> tempTransaction.getTransactionId().equals(transaction.getTransactionId()));
-	}
-
-	@Override
-	public boolean deleteTransaction(long id) {
-
-		return transactionList.removeIf(transaction -> transaction.getTransactionId().equals(id));
-	}*/
 
 	public List<Transaction> getTransactionByFromIBAN(String IBAN) {
 		return transactionDAO.getTransactionByFromIBAN(IBAN);

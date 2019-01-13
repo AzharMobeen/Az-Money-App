@@ -14,7 +14,7 @@ public class Account {
 	private String IBAN;
 	
     @JsonProperty(required = true)
-    private String accountHolder;
+    private Long userId;
 
     @JsonProperty(required = true)
     private String accountType;
@@ -25,19 +25,19 @@ public class Account {
     public Account() {
     }    
     
-	public Account(String iBAN, String accountHolder, String accountType, BigDecimal balance) {
+	public Account(String iBAN, Long userId, String accountType, BigDecimal balance) {
 		super();
 		IBAN = iBAN;
-		this.accountHolder = accountHolder;
+		this.userId = userId;
 		this.accountType = accountType;
 		this.balance = balance;
 	}
 
-	public Account(Long accountId, String iBAN, String accountHolder, String accountType, BigDecimal balance) {
+	public Account(Long accountId, String iBAN, Long userId, String accountType, BigDecimal balance) {
 		super();
 		this.accountId = accountId;
 		IBAN = iBAN;
-		this.accountHolder = accountHolder;
+		this.userId = userId;
 		this.accountType = accountType;
 		this.balance = balance;
 	}
@@ -58,12 +58,12 @@ public class Account {
 		IBAN = iBAN;
 	}
 
-	public String getAccountHolder() {
-		return accountHolder;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setAccountHolder(String accountHolder) {
-		this.accountHolder = accountHolder;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public BigDecimal getBalance() {
@@ -87,7 +87,7 @@ public class Account {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((IBAN == null) ? 0 : IBAN.hashCode());
-		result = prime * result + ((accountHolder == null) ? 0 : accountHolder.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
 		result = prime * result + ((accountType == null) ? 0 : accountType.hashCode());
 		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
@@ -108,10 +108,10 @@ public class Account {
 				return false;
 		} else if (!IBAN.equals(other.IBAN))
 			return false;
-		if (accountHolder == null) {
-			if (other.accountHolder != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!accountHolder.equals(other.accountHolder))
+		} else if (!userId.equals(other.userId))
 			return false;
 		if (accountId == null) {
 			if (other.accountId != null)
@@ -133,7 +133,7 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "Account [accountId=" + accountId + ", IBAN=" + IBAN + ", accountHolder=" + accountHolder
+		return "Account [accountId=" + accountId + ", IBAN=" + IBAN + ", userId=" + userId
 				+ ", accountType=" + accountType + ", balance=" + balance + "]";
 	}    
     	

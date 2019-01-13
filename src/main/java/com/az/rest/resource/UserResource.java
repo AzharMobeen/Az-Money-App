@@ -77,4 +77,10 @@ public class UserResource {
 		else
 			return Response.status(Status.NOT_FOUND).build();
 	}
+	
+	@Path("/user/{id}/accounts")
+	public AccountResource getUserAccountList(@PathParam("id") long id) {
+		return new AccountResource();
+		
+	}
 }

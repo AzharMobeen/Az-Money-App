@@ -3,18 +3,18 @@ package com.az.rest.service.impl;
 import java.util.List;
 
 import com.az.rest.dao.UserDAO;
-import com.az.rest.dao.impl.ManagerDAOFactory;
+import com.az.rest.dao.impl.ManagerDAO;
 import com.az.rest.model.User;
 import com.az.rest.service.UserService;
 
 public class UserServiceImpl implements UserService{
 
 	private static UserServiceImpl userService;
-	private final ManagerDAOFactory managerDAOFactory;
+	private final ManagerDAO managerDAOFactory;
 	private final UserDAO userDAO;
 
 	private UserServiceImpl() {
-		managerDAOFactory = ManagerDAOFactory.getInstance();
+		managerDAOFactory = ManagerDAO.getInstance();
 		userDAO = managerDAOFactory.getUserDAO();	
 	}
 

@@ -64,14 +64,13 @@ public class TransactionDAOImpl implements TransactionDAO {
 	}
 
 	
-	public List<Transaction> getTransactionByFromIBAN(String IBAN) {
-	
+	public List<Transaction> getTransactionByFromIBAN(String IBAN) {	
 		Connection connection = null;
 		PreparedStatement  statement = null;
 		ResultSet resultSet = null;
 		List<Transaction> transactionList= new ArrayList<>();
 		try {
-			connection = ManagerDAOFactory.getConnection();
+			connection = ManagerDAO.getConnection();
 			String sql = "SELECT * FROM Transaction WHERE FROM_IBAN = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, IBAN);
@@ -110,7 +109,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 		ResultSet resultSet = null;
 		List<Transaction> transactionList= new ArrayList<>();
 		try {
-			connection = ManagerDAOFactory.getConnection();
+			connection = ManagerDAO.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM Transaction";
 			resultSet = statement.executeQuery(sql);
@@ -140,4 +139,41 @@ public class TransactionDAOImpl implements TransactionDAO {
 		}
 		return transactionList;
 	}
+	
+	public Transaction getTransactionById(long id) {
+		Connection connection = null;
+		PreparedStatement  statement = null;
+		ResultSet resultSet = null;
+		Transaction transaction= null;
+		try {
+			connection = ManagerDAO.getConnection();
+			String sql = "SELECT * FROM Transaction WHERE TRANSACTIONID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setLong(1, id);			
+			resultSet = statement.executeQuery(sql);
+			
+			if(resultSet.next()) {
+				transaction = new Transaction(resultSet.getLong("TRANSACTIONID"), resultSet.getString("FROM_IBAN"),
+						resultSet.getString("TO_IBAN"), resultSet.getBigDecimal("AMOUNT"),resultSet.getBigDecimal("TRANSACTION_FEE"));				
+			}
+			resultSet.close();
+			statement.close(); 
+			connection.close();
+		}catch (Exception e) {
+			log.error(e.toString());
+		}finally {
+			try{ 
+	            if(statement!=null) statement.close(); 
+	         } catch(SQLException se2) { 
+	        	 this.log.error(se2.toString());
+	         } 
+	         try { 
+	            if(connection!=null) connection.close(); 
+	         } catch(SQLException se){ 
+	        	 this.log.error(se.toString()); 
+	         }
+		}
+		return transaction;
+	}
+	
 }

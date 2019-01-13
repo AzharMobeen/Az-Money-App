@@ -35,7 +35,7 @@ public class UserDAOImpl implements UserDAO{
 		ResultSet resultSet = null;
 		List<User> userList= new ArrayList<>();
 		try {
-			connection = ManagerDAOFactory.getConnection();
+			connection = ManagerDAO.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM User";
 			resultSet = statement.executeQuery(sql);
@@ -74,7 +74,7 @@ public class UserDAOImpl implements UserDAO{
 		ResultSet resultSet = null;
 		User user = null;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "SELECT * FROM User WHERE USERID =?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
@@ -110,7 +110,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		ResultSet resultSet = null;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "INSERT INTO User (USERNAME,FULLNAME,EMAIL) VALUES(?,?,?)";
 			statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, user.getUserName());
@@ -148,7 +148,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		boolean updateFlag = true;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "UPDATE User SET USERNAME=? , FULLNAME = ? , EMAIL = ? WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, user.getUserName());
@@ -186,7 +186,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		boolean deleteFlag = true;
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "DELETE FROM User WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);			
@@ -222,7 +222,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;		
 		try {
-			connection = ManagerDAOFactory.getConnection();			
+			connection = ManagerDAO.getConnection();			
 			String sql = "SELECT * FROM User WHERE USERNAME =?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, userName);

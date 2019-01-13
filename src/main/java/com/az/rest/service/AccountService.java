@@ -6,9 +6,8 @@ import com.az.rest.model.Account;
 
 public interface AccountService {
 
-	public List<Account> getAllAccounts();
-	public Account getAccountById(long id);
-	public Account createAccount(Account account);
-	public boolean updateAccount(long accountId,Account account);
-	public boolean deleteAccount(long id);
+	List<Account> getAllAccounts();
+	Account getAccountById(long id);
+	Account createAccount(Account account);	
+	List<Account> getUserAccountList(long userId);
 }
