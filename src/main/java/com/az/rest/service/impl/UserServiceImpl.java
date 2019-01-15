@@ -3,26 +3,21 @@ package com.az.rest.service.impl;
 import java.util.List;
 
 import com.az.rest.dao.UserDAO;
-import com.az.rest.dao.impl.ManagerDAO;
+import com.az.rest.dao.impl.UserDAOImpl;
 import com.az.rest.model.User;
 import com.az.rest.service.UserService;
 
 public class UserServiceImpl implements UserService{
 
-	private static UserServiceImpl userService;
-	private final ManagerDAO managerDAOFactory;
+	private static UserServiceImpl userService;	
 	private final UserDAO userDAO;
-
-	private UserServiceImpl() {
-		managerDAOFactory = ManagerDAO.getInstance();
-		userDAO = managerDAOFactory.getUserDAO();	
+	private UserServiceImpl() {		
+		userDAO = UserDAOImpl.getInstance();		
 	}
 
 	public static UserServiceImpl getInstance() {
-
 		if (userService == null)
 			userService = new UserServiceImpl();
-
 		return userService;
 	}
 
@@ -51,5 +46,5 @@ public class UserServiceImpl implements UserService{
 
 	public boolean deleteUser(long id) {
 		return userDAO.deleteUser(id);
-	}	
+	}				
 }

@@ -7,15 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.az.rest.dao.TransactionDAO;
 import com.az.rest.model.Transaction;
 
 public class TransactionDAOImpl implements TransactionDAO {
-	Logger log = LoggerFactory.getLogger(TransactionDAOImpl.class);
+	private static final Logger LOGGER = Logger.getLogger( TransactionDAOImpl.class.getName() );
 	private static TransactionDAOImpl transactionDAOImpl;
 	
 	private TransactionDAOImpl() {}
@@ -51,12 +50,12 @@ public class TransactionDAOImpl implements TransactionDAO {
 			
 			statement.close(); 	        
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	         } catch(SQLException e) { 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
 	         } 
 	         
 		}		
@@ -70,12 +69,12 @@ public class TransactionDAOImpl implements TransactionDAO {
 		ResultSet resultSet = null;
 		List<Transaction> transactionList= new ArrayList<>();
 		try {
-			connection = ManagerDAO.getConnection();
+			connection = DBManager.getConnection();
 			String sql = "SELECT * FROM Transaction WHERE FROM_IBAN = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, IBAN);
 			
-			resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery();
 			
 			while(resultSet.next()) {
 				Transaction transaction = new Transaction(resultSet.getLong("TRANSACTIONID"), resultSet.getString("FROM_IBAN"),
@@ -87,17 +86,17 @@ public class TransactionDAOImpl implements TransactionDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	         } catch(SQLException e) { 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
-	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	         } catch(SQLException e){ 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e); 
 	         }
 		}
 		return transactionList;
@@ -109,7 +108,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 		ResultSet resultSet = null;
 		List<Transaction> transactionList= new ArrayList<>();
 		try {
-			connection = ManagerDAO.getConnection();
+			connection = DBManager.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM Transaction";
 			resultSet = statement.executeQuery(sql);
@@ -124,17 +123,17 @@ public class TransactionDAOImpl implements TransactionDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	         } catch(SQLException e) { 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
-	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	         } catch(SQLException e){ 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
 	         }
 		}
 		return transactionList;
@@ -146,11 +145,11 @@ public class TransactionDAOImpl implements TransactionDAO {
 		ResultSet resultSet = null;
 		Transaction transaction= null;
 		try {
-			connection = ManagerDAO.getConnection();
+			connection = DBManager.getConnection();
 			String sql = "SELECT * FROM Transaction WHERE TRANSACTIONID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);			
-			resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery();
 			
 			if(resultSet.next()) {
 				transaction = new Transaction(resultSet.getLong("TRANSACTIONID"), resultSet.getString("FROM_IBAN"),
@@ -160,20 +159,61 @@ public class TransactionDAOImpl implements TransactionDAO {
 			statement.close(); 
 			connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
-	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	         } catch(SQLException e) { 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
-	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	         } catch(SQLException e){ 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e); 
 	         }
 		}
 		return transaction;
+	}
+
+	public List<Transaction> getUserTrasactionByUserId(long userId) {
+
+		Connection connection = null;
+		PreparedStatement  statement = null;
+		ResultSet resultSet = null;
+		List<Transaction> transactionList= new ArrayList<>();
+		try {
+			connection = DBManager.getConnection();
+			String sql = "SELECT transaction.* FROM Transaction transaction JOIN Account account on transaction.FROM_IBAN = account.IBAN "
+					+ "	JOIN User user on account.USERID = user.USERID WHERE user.USERID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setLong(1, userId);
+			
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()) {
+				Transaction transaction = new Transaction(resultSet.getLong("TRANSACTIONID"), resultSet.getString("FROM_IBAN"),
+						resultSet.getString("TO_IBAN"), resultSet.getBigDecimal("AMOUNT"),resultSet.getBigDecimal("TRANSACTION_FEE"));
+				transactionList.add(transaction);
+			}
+			
+			resultSet.close();
+			statement.close(); 
+	        connection.close();
+		}catch (Exception e) {
+			LOGGER.log(Level.SEVERE, e.toString(),e);
+		}finally {
+			try{ 
+	            if(statement!=null) statement.close(); 
+	         } catch(SQLException e) { 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
+	         } 
+	         try { 
+	            if(connection!=null) connection.close(); 
+	         } catch(SQLException e){ 
+	        	 LOGGER.log(Level.SEVERE, e.toString(),e); 
+	         }
+		}
+		return transactionList;
 	}
 	
 }

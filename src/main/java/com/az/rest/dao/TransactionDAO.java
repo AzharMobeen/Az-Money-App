@@ -11,4 +11,5 @@ public interface TransactionDAO {
 	List<Transaction> getTransactionByFromIBAN(String IBAN);
 	List<Transaction> getAllTransaction();
 	Transaction getTransactionById(long id);
+	List<Transaction> getUserTrasactionByUserId(long userId);
 }

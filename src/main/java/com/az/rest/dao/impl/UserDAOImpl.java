@@ -7,16 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.az.rest.dao.UserDAO;
 import com.az.rest.model.User;
 
 public class UserDAOImpl implements UserDAO{
 
-	Logger log = LoggerFactory.getLogger(UserDAOImpl.class);			
+	private static final Logger LOGGER = Logger.getLogger( UserDAOImpl.class.getName() );		
 	
 	private static UserDAO userDAO;
 	
@@ -35,7 +34,7 @@ public class UserDAOImpl implements UserDAO{
 		ResultSet resultSet = null;
 		List<User> userList= new ArrayList<>();
 		try {
-			connection = ManagerDAO.getConnection();
+			connection = DBManager.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM User";
 			resultSet = statement.executeQuery(sql);
@@ -50,17 +49,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}
 		return userList;
@@ -74,7 +73,7 @@ public class UserDAOImpl implements UserDAO{
 		ResultSet resultSet = null;
 		User user = null;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "SELECT * FROM User WHERE USERID =?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
@@ -88,17 +87,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}
 		return user;
@@ -110,7 +109,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		ResultSet resultSet = null;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "INSERT INTO User (USERNAME,FULLNAME,EMAIL) VALUES(?,?,?)";
 			statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, user.getUserName());
@@ -127,17 +126,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}		
 		return user;
@@ -148,7 +147,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		boolean updateFlag = true;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "UPDATE User SET USERNAME=? , FULLNAME = ? , EMAIL = ? WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, user.getUserName());
@@ -164,17 +163,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}		
 		return updateFlag;
@@ -186,7 +185,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;		
 		boolean deleteFlag = true;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "DELETE FROM User WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);			
@@ -199,17 +198,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}		
 		return deleteFlag;
@@ -222,7 +221,7 @@ public class UserDAOImpl implements UserDAO{
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;		
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "SELECT * FROM User WHERE USERNAME =?";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, userName);
@@ -235,17 +234,17 @@ public class UserDAOImpl implements UserDAO{
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}
 		return userNameAvailable;

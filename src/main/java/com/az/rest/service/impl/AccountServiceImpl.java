@@ -3,18 +3,16 @@ package com.az.rest.service.impl;
 import java.util.List;
 
 import com.az.rest.dao.AccountDAO;
-import com.az.rest.dao.impl.ManagerDAO;
+import com.az.rest.dao.impl.AccountDAOImpl;
 import com.az.rest.model.Account;
 import com.az.rest.service.AccountService;
 
 public class AccountServiceImpl implements AccountService{
 	
-	private static AccountServiceImpl accountService;
-	private final ManagerDAO managerDAOFactory;
+	private static AccountServiceImpl accountService;	
 	private final AccountDAO accountDAO;
-	private AccountServiceImpl() {
-		managerDAOFactory = ManagerDAO.getInstance();
-		accountDAO = managerDAOFactory.getAccountDAO();		
+	private AccountServiceImpl() {		
+		accountDAO = AccountDAOImpl.getInstance();		
 	}		
 
 	public static AccountServiceImpl getInstance() {

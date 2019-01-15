@@ -4,32 +4,31 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.az.rest.dao.AccountDAO;
 import com.az.rest.dao.TransactionDAO;
-import com.az.rest.dao.impl.ManagerDAO;
+import com.az.rest.dao.impl.AccountDAOImpl;
+import com.az.rest.dao.impl.DBManager;
+import com.az.rest.dao.impl.TransactionDAOImpl;
 import com.az.rest.model.Account;
 import com.az.rest.model.Transaction;
 import com.az.rest.service.TransactionService;
 
 public class TransactionServiceImpl implements TransactionService{
-	Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
+	private static final Logger LOGGER = Logger.getLogger( TransactionServiceImpl.class.getName() );
 	
-	private static TransactionServiceImpl transactionService;	
-	private final ManagerDAO managerDAO;
+	private static TransactionServiceImpl transactionService;		
 	private final AccountDAO accountDAO;
 	private final TransactionDAO transactionDAO;
 	
-	private TransactionServiceImpl() {
-		managerDAO = ManagerDAO.getInstance();
-		accountDAO = managerDAO.getAccountDAO();
-		transactionDAO = managerDAO.getTransactionDAO();	
+	private TransactionServiceImpl() {		
+		accountDAO = AccountDAOImpl.getInstance();
+		transactionDAO = TransactionDAOImpl.getInstance();	
 	}
 	
 	public static TransactionServiceImpl getInstance() {
@@ -38,8 +37,8 @@ public class TransactionServiceImpl implements TransactionService{
 			transactionService = new TransactionServiceImpl();		
 		return transactionService;
 	}
-
-	public Response moneyTransfer(Transaction transaction) {
+	
+	public Response transferMoney(Transaction transaction) {
 		
 		Account fromAccount = null;
 		Account toAccount = null;
@@ -52,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService{
 			//Both IBAN (FromIBAN and ToIBAN) should be different
 			if(!transaction.getFromIBAN().equals(transaction.getToIBAN())) {
 				
-				connection = ManagerDAO.getConnection();
+				connection = DBManager.getConnection();
 				connection.setAutoCommit(false);
 				fromAccount = accountDAO.getAccountByIBANForUpdateBalance(connection,transaction.getFromIBAN());
 								
@@ -94,13 +93,13 @@ public class TransactionServiceImpl implements TransactionService{
 				response = Response.status(Status.NOT_ACCEPTABLE).entity(output).build();
 			}
 		} catch (Exception e) {
-			log.error(e.toString());
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try {
 				if(connection!=null)
 					connection.close();
 			} catch (SQLException e) {
-				log.error(e.toString());
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
 		}				
 		return response;
@@ -116,5 +115,10 @@ public class TransactionServiceImpl implements TransactionService{
 
 	public List<Transaction> getTransactionByFromIBAN(String IBAN) {
 		return transactionDAO.getTransactionByFromIBAN(IBAN);
+	}
+	
+	public List<Transaction> getUserTransactionListByUserId(long userId) {
+		List<Transaction> transactionList = transactionDAO.getUserTrasactionByUserId(userId);
+		return transactionList;
 	}
 }

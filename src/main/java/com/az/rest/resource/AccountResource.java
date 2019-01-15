@@ -15,18 +15,16 @@ import javax.ws.rs.core.Response.Status;
 
 import com.az.rest.model.Account;
 import com.az.rest.service.AccountService;
-import com.az.rest.service.impl.ManagerService;
+import com.az.rest.service.impl.AccountServiceImpl;
 
 @Path("/accounts")
 public class AccountResource {
-	
-	private ManagerService managerService;
+		
 	private AccountService accountService;
 	
 	@PostConstruct
 	public void init() {
-		managerService = ManagerService.getInstance();
-		accountService = managerService.getAccountService();
+		accountService = AccountServiceImpl.getInstance();
 	}
 	
 	@GET
@@ -55,5 +53,12 @@ public class AccountResource {
 			return Response.status(Status.CREATED).entity("Successfully Created").build();
 		else
 			return Response.status(Status.NOT_ACCEPTABLE).entity("Not Acceptable because IBAN already exist").build();
-	}	
+	}
+	
+	@GET
+	@Path("/user/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Account> getUserAccountList(@PathParam("id") long id) {
+		return accountService.getUserAccountList(id);		
+	}
 }

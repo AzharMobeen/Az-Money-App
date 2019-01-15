@@ -14,7 +14,7 @@ public class User {
 	@JsonProperty(required=true)
 	private String fullName;
 	@JsonProperty(required=true)
-	private String email;
+	private String email;		
 	
 	public User() {}		
 	
@@ -112,5 +112,5 @@ public class User {
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", fullName=" + fullName + ", email=" + email
 				+ "]";
-	}	
+	}
 }

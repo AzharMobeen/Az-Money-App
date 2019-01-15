@@ -8,16 +8,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.az.rest.dao.AccountDAO;
 import com.az.rest.model.Account;
+import com.az.rest.service.impl.TransactionServiceImpl;
 
 public class AccountDAOImpl implements AccountDAO {
-
-	Logger log = LoggerFactory.getLogger(AccountDAOImpl.class);
+	private static final Logger LOGGER = Logger.getLogger( TransactionServiceImpl.class.getName() );
+	
 	
 	private AccountDAOImpl() {}
 	private static AccountDAOImpl accountDAOImpl;	
@@ -33,7 +33,7 @@ public class AccountDAOImpl implements AccountDAO {
 		ResultSet resultSet = null;
 		List<Account> accountList= new ArrayList<>();
 		try {
-			connection = ManagerDAO.getConnection();
+			connection = DBManager.getConnection();
 			statement = connection.createStatement();
 			String sql = "SELECT * FROM Account";
 			resultSet = statement.executeQuery(sql);
@@ -48,17 +48,17 @@ public class AccountDAOImpl implements AccountDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se); 
 	         }
 		}
 		return accountList;
@@ -70,7 +70,7 @@ public class AccountDAOImpl implements AccountDAO {
 		ResultSet resultSet = null;
 		Account account = null;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "SELECT * FROM Account WHERE ACCOUNTID =?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
@@ -84,17 +84,17 @@ public class AccountDAOImpl implements AccountDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}
 		return account;
@@ -105,7 +105,7 @@ public class AccountDAOImpl implements AccountDAO {
 		PreparedStatement statement = null;		
 		ResultSet resultSet = null;
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "INSERT INTO Account (IBAN, USERID, ACCOUNT_TYPE, BALANCE) VALUES(?,?,?,?)";
 			statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, account.getIBAN());
@@ -123,21 +123,22 @@ public class AccountDAOImpl implements AccountDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se); 
 	         }
 		}		
 		return account;
 	}	
+	
 	
 	public boolean checkIBANAvailable(String IBAN) {
 		boolean checkIBAN = true;
@@ -145,7 +146,7 @@ public class AccountDAOImpl implements AccountDAO {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;		
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = " SELECT * FROM Account WHERE IBAN = ? ";
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, IBAN);
@@ -158,17 +159,17 @@ public class AccountDAOImpl implements AccountDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se); 
 	         }
 		}
 		return checkIBAN;
@@ -177,7 +178,7 @@ public class AccountDAOImpl implements AccountDAO {
 	/*
 	 * Account will be lock for balance update
 	 * 
-	 * */
+	 * */	
 	public Account getAccountByIBANForUpdateBalance(Connection connection,String IBAN) {
 		String sql = "SELECT * FROM Account WHERE IBAN = ? FOR UPDATE";
 		Account account= null;
@@ -193,7 +194,7 @@ public class AccountDAOImpl implements AccountDAO {
 			}
 			resultSet.close();				
 		} catch (SQLException e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return account;
 	}
@@ -215,12 +216,12 @@ public class AccountDAOImpl implements AccountDAO {
 			preparedStatement.close(); 
 	        
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(preparedStatement!=null) preparedStatement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 	         
 		}		
 		return updateFlag;
@@ -232,12 +233,12 @@ public class AccountDAOImpl implements AccountDAO {
 		ResultSet resultSet = null;
 		List<Account> accountList= new ArrayList<>();
 		try {
-			connection = ManagerDAO.getConnection();			
+			connection = DBManager.getConnection();			
 			String sql = "SELECT * FROM Account WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, userId);
 			
-			resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery();
 			
 			while(resultSet.next()) {
 				Account account = new Account(resultSet.getLong("ACCOUNTID"), resultSet.getString("IBAN"),
@@ -249,17 +250,17 @@ public class AccountDAOImpl implements AccountDAO {
 			statement.close(); 
 	        connection.close();
 		}catch (Exception e) {
-			log.error(e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}finally {
 			try{ 
 	            if(statement!=null) statement.close(); 
 	         } catch(SQLException se2) { 
-	        	 this.log.error(se2.toString());
+	        	 LOGGER.log(Level.SEVERE, se2.toString(),se2);
 	         } 
 	         try { 
 	            if(connection!=null) connection.close(); 
 	         } catch(SQLException se){ 
-	        	 this.log.error(se.toString()); 
+	        	 LOGGER.log(Level.SEVERE, se.toString(),se);
 	         }
 		}
 		return accountList;

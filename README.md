@@ -1,12 +1,13 @@
 # Az-Money-App
 It's Jersey RESTfull Api for Money transfer.
 
-#How to use:
-* User should be registered.
-* 
+**How to use:**
+* Create user.
+* Create at least two User accounts.
+* Do Transaction and verify transaction.
 
 
-#Sample Data
+**Sample Data**
 
 * User
 
@@ -23,7 +24,7 @@ It's Jersey RESTfull Api for Money transfer.
 ```
 {
 	"IBAN": "AE111222334455502",
-	"accountHolder": "Az",	
+	"USERID": 1,	
 	"accountType": "AED",
 	"balance": 1000
 }

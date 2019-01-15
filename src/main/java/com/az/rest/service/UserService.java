@@ -6,9 +6,9 @@ import com.az.rest.model.User;
 
 public interface UserService {
 
-	public List<User> getAllUsers();
-	public User getUserById(long id);
-	public User createUser(User user);
-	public boolean updateUser(long userId,User user);
-	public boolean deleteUser(long id);
+	List<User> getAllUsers();
+	User getUserById(long id);
+	User createUser(User user);
+	boolean updateUser(long userId,User user);
+	boolean deleteUser(long id);	
 }
