@@ -9,7 +9,6 @@ import com.az.rest.model.Transaction;
 public interface TransactionService {
 
 	List<Transaction> getAllTransactions();
-	List<Transaction> getTransactionByFromIBAN(String IBAN);
 	Transaction getTransactionById(long id);	
 	Response transferMoney(Transaction transaction); 
 	List<Transaction> getUserTransactionListByUserId(long userId);

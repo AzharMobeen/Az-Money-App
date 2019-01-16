@@ -82,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService{
 						}
 					}else {
 						output = "To IBAN Not found";
-						response = Response.status(Status.NOT_ACCEPTABLE).entity(output).build();
+						response = Response.status(Status.NOT_FOUND).entity(output).build();
 					}
 				}else { 
 					output = "From IBAN not valid for this transaction";
@@ -111,11 +111,7 @@ public class TransactionServiceImpl implements TransactionService{
 	
 	public Transaction getTransactionById(long id) {
 		return transactionDAO.getTransactionById(id);
-	}
-
-	public List<Transaction> getTransactionByFromIBAN(String IBAN) {
-		return transactionDAO.getTransactionByFromIBAN(IBAN);
-	}
+	}	
 	
 	public List<Transaction> getUserTransactionListByUserId(long userId) {
 		List<Transaction> transactionList = transactionDAO.getUserTrasactionByUserId(userId);

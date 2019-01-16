@@ -7,8 +7,7 @@ import com.az.rest.model.Transaction;
 
 public interface TransactionDAO {
 
-	Transaction transferMoney(Connection connection,Transaction transaction);
-	List<Transaction> getTransactionByFromIBAN(String IBAN);
+	Transaction transferMoney(Connection connection,Transaction transaction);	
 	List<Transaction> getAllTransaction();
 	Transaction getTransactionById(long id);
 	List<Transaction> getUserTrasactionByUserId(long userId);

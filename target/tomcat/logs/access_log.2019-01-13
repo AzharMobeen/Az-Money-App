@@ -1,7 +1,0 @@
-127.0.0.1 - - [13/Jan/2019:18:52:46 +0400] "GET /rest-api/accounts HTTP/1.1" 200 732 http-bio-8080-exec-1 1705
-127.0.0.1 - - [13/Jan/2019:18:54:48 +0400] "GET /rest-api/users HTTP/1.1" 200 314 http-bio-8080-exec-3 39
-127.0.0.1 - - [13/Jan/2019:19:35:56 +0400] "GET /rest-api/accounts HTTP/1.1" 200 732 http-bio-8080-exec-5 20
-127.0.0.1 - - [13/Jan/2019:19:40:30 +0400] "GET /rest-api/transactions HTTP/1.1" 200 2 http-bio-8080-exec-7 37
-127.0.0.1 - - [13/Jan/2019:19:40:48 +0400] "POST /rest-api/transactions HTTP/1.1" 201 59 http-bio-8080-exec-8 2156
-127.0.0.1 - - [13/Jan/2019:19:42:32 +0400] "GET /rest-api/transactions HTTP/1.1" 200 111 http-bio-8080-exec-10 25
-127.0.0.1 - - [13/Jan/2019:22:28:34 +0400] "GET /rest-api/users/user/2/accounts HTTP/1.1" 500 4249 http-bio-8080-exec-1 62364

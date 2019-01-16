@@ -52,9 +52,9 @@ public class UserResource {
 	public Response create(User user) {
 		User tempUser = userService.createUser(user);
 		if(tempUser!=null)
-			return Response.status(Status.CREATED).entity(tempUser).build();
+			return Response.status(Status.CREATED).entity("User Successfully created").build();
 		else
-			return Response.status(Status.NOT_ACCEPTABLE).build();
+			return Response.status(Status.NOT_ACCEPTABLE).entity("User data not acceptable").build();
 	}
 
 	@PUT
@@ -63,9 +63,9 @@ public class UserResource {
 	public Response update(@PathParam("id") long id, User user) {
 		boolean updateFlag = userService.updateUser(id,user);
 		if(updateFlag)
-			return Response.status(Status.ACCEPTED).build();
+			return Response.status(Status.ACCEPTED).entity("Successfully updated").build();
 		else
-			return Response.status(Status.NOT_MODIFIED).build();
+			return Response.status(Status.NOT_MODIFIED).entity("Not modified").build();
 	}
 
 	@DELETE
@@ -73,8 +73,8 @@ public class UserResource {
 	public Response delete(@PathParam("id") long id) {
 		boolean deleteFlag = userService.deleteUser(id);
 		if(deleteFlag)
-			return Response.status(Status.ACCEPTED).build();
+			return Response.status(Status.ACCEPTED).entity("Successfully deleted").build();
 		else
-			return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.NOT_FOUND).entity("User id not found").build();
 	}				
 }

@@ -1,1 +1,6 @@
-D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\UserResourceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\resource\AccountResourceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\service\UserServiceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\resource\TransactionResourceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\service\TransactionServiceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\resource\UserResourceTest.java
+D:\eclispeWorkspace\Az-Money-App\src\test\java\com\az\rest\test\service\AccountServiceTest.java

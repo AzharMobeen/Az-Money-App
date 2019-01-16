@@ -1,6 +1,7 @@
 com\az\rest\dao\impl\TransactionDAOImpl.class
 com\az\rest\service\impl\AccountServiceImpl.class
 com\az\rest\resource\UserResource.class
+com\az\rest\dao\impl\DBManager.class
 com\az\rest\dao\impl\AccountDAOImpl.class
 com\az\rest\model\User.class
 com\az\rest\resource\TransactionResource.class

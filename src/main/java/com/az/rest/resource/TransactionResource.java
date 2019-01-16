@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,10 +33,10 @@ public class TransactionResource {
 	}
 
 	@GET
-	@Path("transaction/{fromIBAN}")
+	@Path("transaction/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Transaction> getByIBAN(@PathParam("fromIBAN") String fromIBAN) {
-		return transactionService.getTransactionByFromIBAN(fromIBAN);
+	public Transaction getTransactionById(@PathParam("id") long id) {
+		return transactionService.getTransactionById(id);
 	}
 
 	@GET
@@ -46,7 +46,7 @@ public class TransactionResource {
 		return transactionService.getUserTransactionListByUserId(id);		
 	}
 	
-	@PUT
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response transferMoney(Transaction transaction) {

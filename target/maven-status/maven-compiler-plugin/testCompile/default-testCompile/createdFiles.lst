@@ -1,1 +1,6 @@
-com\az\rest\test\UserResourceTest.class
+com\az\rest\test\service\TransactionServiceTest.class
+com\az\rest\test\resource\AccountResourceTest.class
+com\az\rest\test\service\AccountServiceTest.class
+com\az\rest\test\service\UserServiceTest.class
+com\az\rest\test\resource\TransactionResourceTest.class
+com\az\rest\test\resource\UserResourceTest.class

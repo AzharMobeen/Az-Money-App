@@ -6,12 +6,18 @@ It's Jersey RESTfull Api for Money transfer. I'm using Embedded Tomcat (maven pl
 **How to Run**
 * To run all test use: **mvn test**
 * To run project use:	**mvn clean install tomcat7:run**
-
+* Please use User, Account, Transaction samples.
+* Dummy data already inserted after application start.
+  
 **Application Resources:**
 	
-* [http://localhost:8080/users](http://localhost:8080/users)
-* [http://localhost:8080/users](http://localhost:8080/users)
-[http://localhost:8080/users](http://localhost:8080/users)
+* Fetch all users: 	
+	[http://localhost:8080/users](http://localhost:8080/users)
+* Fetch user by id:	
+	[http://localhost:8080/users/user/1](http://localhost:8080/users/user/1)
+* Create User:
+	[http://localhost:8080/users](http://localhost:8080/users)
+* Update User:	[http://localhost:8080/users/user/1](http://localhost:8080/users/user/1)
 
 
 **How to use:**

@@ -61,47 +61,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 		}		
 		return transaction;
 	}
-
-	
-	public List<Transaction> getTransactionByFromIBAN(String IBAN) {	
-		Connection connection = null;
-		PreparedStatement  statement = null;
-		ResultSet resultSet = null;
-		List<Transaction> transactionList= new ArrayList<>();
-		try {
-			connection = DBManager.getConnection();
-			String sql = "SELECT * FROM Transaction WHERE FROM_IBAN = ?";
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, IBAN);
 			
-			resultSet = statement.executeQuery();
-			
-			while(resultSet.next()) {
-				Transaction transaction = new Transaction(resultSet.getLong("TRANSACTIONID"), resultSet.getString("FROM_IBAN"),
-						resultSet.getString("TO_IBAN"), resultSet.getBigDecimal("AMOUNT"),resultSet.getBigDecimal("TRANSACTION_FEE"));
-				transactionList.add(transaction);
-			}
-			
-			resultSet.close();
-			statement.close(); 
-	        connection.close();
-		}catch (Exception e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
-		}finally {
-			try{ 
-	            if(statement!=null) statement.close(); 
-	         } catch(SQLException e) { 
-	        	 LOGGER.log(Level.SEVERE, e.toString(),e);
-	         } 
-	         try { 
-	            if(connection!=null) connection.close(); 
-	         } catch(SQLException e){ 
-	        	 LOGGER.log(Level.SEVERE, e.toString(),e); 
-	         }
-		}
-		return transactionList;
-	}
-	
 	public List<Transaction> getAllTransaction() {
 		Connection connection = null;
 		Statement  statement = null;
