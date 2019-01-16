@@ -1,5 +1,18 @@
 # Az-Money-App
-It's Jersey RESTfull Api for Money transfer.
+It's Jersey RESTfull Api for Money transfer. I'm using Embedded Tomcat (maven plugin).
+
+
+
+**How to Run**
+* To run all test use: **mvn test**
+* To run project use:	**mvn clean install tomcat7:run**
+
+**Application Resources:**
+	
+* [http://localhost:8080/users](http://localhost:8080/users)
+* [http://localhost:8080/users](http://localhost:8080/users)
+[http://localhost:8080/users](http://localhost:8080/users)
+
 
 **How to use:**
 * Create user.

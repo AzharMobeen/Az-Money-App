@@ -116,7 +116,8 @@ public class AccountDAOImpl implements AccountDAO {
 			
 			if(insertion==1) {
 				resultSet = statement.getGeneratedKeys();
-				account.setAccountId(resultSet.getLong(1));
+				if(resultSet.next())
+					account.setAccountId(resultSet.getLong(1));
 				resultSet.close();
 			}
 			

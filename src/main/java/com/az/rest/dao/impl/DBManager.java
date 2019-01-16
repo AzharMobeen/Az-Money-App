@@ -34,6 +34,10 @@ public class DBManager {
 		return getJdbcConnectionPool().getConnection();
 	}
 
+	/*
+	 * Initialize DB with create Tables and some insertion statements
+	 * Please check src/test/resources/initialData.sql
+	 * */  
 	private void initData() {
 		Connection connection = null;
 		try {

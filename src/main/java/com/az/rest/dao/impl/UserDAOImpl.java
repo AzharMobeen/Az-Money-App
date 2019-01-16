@@ -115,11 +115,12 @@ public class UserDAOImpl implements UserDAO{
 			statement.setString(1, user.getUserName());
 			statement.setString(2, user.getFullName());
 			statement.setString(3, user.getEmail());
-			int insertion = statement.executeUpdate();	
+			int insertion = statement.executeUpdate();
 			
 			if(insertion==1) {
 				resultSet = statement.getGeneratedKeys();
-				user.setUserId(resultSet.getLong(1));
+				if(resultSet.next())
+					user.setUserId(resultSet.getLong(1));
 				resultSet.close();
 			}
 			

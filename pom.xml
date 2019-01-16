@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.az</groupId>
-	<artifactId>rest-api</artifactId>
+	<artifactId>az-money-transfer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>rest-api</name>
+	<name>Az-Money-Transfer</name>
 	<description>simple rest api with jersey</description>
 
 	<properties>
@@ -92,7 +92,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>rest-api</finalName>
+		<finalName>Az-Money-Transfer-Api</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -100,6 +100,7 @@
 				<version>2.2</version>
 				<configuration>
 					<port>8080</port>
+					<path>/</path>					
 				</configuration>
 			</plugin>
 		</plugins>
