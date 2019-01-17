@@ -36,8 +36,22 @@ public class TransactionResourceTest extends JerseyTest {
 	@BeforeClass
 	public static void initDBWithTableData() {
 		DBManager.getInstance();
-	}		
+	}
+
+	/*
+	 * Dummy insertion done before test so it will be successful
+	 * */
+	@Test
+	public void getTransactionByIdSuccessTest() {
+		Response output = target("/transactions/transaction/5").request().get();
+		assertEquals("Should return status 200", Status.OK.getStatusCode(), output.getStatus());
+		assertNotNull("Should return user object as json", output.getEntity());		
+		System.out.println(output.getStatus());		
+	}
 	
+	/*
+	 * Dummy insertion done before test but not up till transactionId = 100 so it will be successful
+	 * */
 	@Test
 	public void getTransactionByIdFailedTest() {
 		Response output = target("/transactions/100").request().get();
@@ -45,6 +59,10 @@ public class TransactionResourceTest extends JerseyTest {
 		System.out.println(output.getStatus());		
 	}
 
+	/*
+	 * Dummy insertion done before test and both IBAN available in DB with balance
+	 * so it will be successful
+	 * */
 	@Test
 	public void transferMoneySuccessTest() {
 		Transaction transaction= new Transaction("PK111222334455502","AE111222334455502", new BigDecimal(2000),new BigDecimal(20));
@@ -54,8 +72,8 @@ public class TransactionResourceTest extends JerseyTest {
 	}
 	
 	/*
-	 * From IBAN doesn't have enough balance
-	 */	
+	 * From IBAN doesn't have enough balance so it will be successful
+	 * */		
 	@Test
 	public void transferMoneyFailedTest1() {
 		Transaction transaction= new Transaction("PK111222334455502","AE111222334455502", new BigDecimal(2000000),new BigDecimal(20));
@@ -65,8 +83,8 @@ public class TransactionResourceTest extends JerseyTest {
 	}
 	
 	/*
-	 * To IBAN Not found
-	 */		
+	 * To IBAN Not found so it will be successful
+	 * */	
 	@Test
 	public void transferMoneyFailedTest2() {
 		Transaction transaction= new Transaction("PK111222334455502","AE55502", new BigDecimal(2070),new BigDecimal(20));
@@ -76,7 +94,7 @@ public class TransactionResourceTest extends JerseyTest {
 	}
 	
 	/*
-	 * Both IBAN (from,to) should be different
+	 * Both IBAN (from,to) should be different but bellow are same so it will be successful
 	 * */
 	@Test
 	public void transferMoneyFailedTest3() {
@@ -86,6 +104,9 @@ public class TransactionResourceTest extends JerseyTest {
 		assertEquals("Should return status 406 because Both IBAN (from,to) are same", Status.NOT_ACCEPTABLE.getStatusCode(), response.getStatus());
 	}
 	
+	/*
+	 * Dummy data inserted before test with UserID = 1 so it will be successful
+	 * */
 	@Test
 	public void getUserTransactionListSuccessTest() {		
 		Response response = target("/transactions/user/1").request().get();
@@ -94,6 +115,9 @@ public class TransactionResourceTest extends JerseyTest {
 		System.out.println(response.getStatus());
 	}
 	
+	/*
+	 * UserId = 110 not exist in DB so it will be successful
+	 * */
 	@Test
 	public void getUserTransactionListFailedTest() throws JsonParseException, JsonMappingException, IOException{		
 		Response response = target("/transactions/user/110").request().get();
@@ -102,6 +126,9 @@ public class TransactionResourceTest extends JerseyTest {
 		assertEquals(0, transactionList.length);
 	}
 	
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void fetchAll() {
 		Response response = target("/transactions").request().get();

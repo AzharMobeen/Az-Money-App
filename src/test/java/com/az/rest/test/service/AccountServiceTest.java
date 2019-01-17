@@ -26,18 +26,27 @@ public class AccountServiceTest {
 		accountService = AccountServiceImpl.getInstance();
 	}
 	
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void getAccountByIdSuccessTest() {		
 		Account account = accountService.getAccountById(Long.valueOf(1));
 		assertNotNull("Should return account object", account);		
 	}
 	
+	/*
+	 * Dummy data inserted before test but not up till accountId=100 so it will be successful
+	 * */
 	@Test
 	public void getByIdFailedTest() {
 		Account account = accountService.getAccountById(Long.valueOf(100));
 		assertNull("Should return null object", account);		
 	}
 
+	/*
+	 * IBAN = AE12345678954 not exist in Account Table so it will be successful
+	 * */
 	@Test
 	public void createSuccessTest() {
 		Account account = new Account("AE12345678954", Long.valueOf(1), "AED", new BigDecimal(200));
@@ -46,8 +55,7 @@ public class AccountServiceTest {
 	}
 	
 	/*
-	 * IBAN already exist in DB
-	 * AE112233445501
+	 * IBAN = AE112233445501 already exist in DB so it will be successful
 	 * */	
 	@Test
 	public void createFailedTest() {
@@ -56,6 +64,9 @@ public class AccountServiceTest {
 		assertNull("Should return null object", account);
 	}
 
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void userAccoutListSuccessTest() {		
 		List<Account> accountList = accountService.getUserAccountList(1);		
@@ -63,12 +74,18 @@ public class AccountServiceTest {
 		assertNotEquals(0, accountList.size());
 	}
 	
+	/*
+	 * Dummy data inserted before test but not up till userId=1000 so it will be successful
+	 * */
 	@Test
 	public void userAccoutListFailedTest(){			
 		List<Account> accountList = accountService.getUserAccountList(1000);
 		assertEquals(0, accountList.size());
-	}
-	
+	}	
+
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void getAllAccounts() {
 		List<Account> accountList = accountService.getAllAccounts();		

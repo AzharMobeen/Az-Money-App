@@ -35,6 +35,9 @@ public class AccountResourceTest extends JerseyTest {
 		DBManager.getInstance();
 	}
 	
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void getByIdSuccessTest() {
 		Response output = target("/accounts/account/1").request().get();
@@ -44,6 +47,9 @@ public class AccountResourceTest extends JerseyTest {
 		System.out.println(output.readEntity(String.class));
 	}
 	
+	/*
+	 * Dummy data inserted before test but not up till accountId=100 so it will be successful
+	 * */
 	@Test
 	public void getByIdFailedTest() {
 		Response output = target("/accounts/account/100").request().get();
@@ -51,6 +57,9 @@ public class AccountResourceTest extends JerseyTest {
 		System.out.println(output.getStatus());		
 	}
 
+	/*
+	 * IBAN = AE123456789 not exist in Account Table so it will be successful
+	 * */
 	@Test
 	public void createSuccessTest() {
 		Account account = new Account("AE123456789", Long.valueOf(1), "AED", new BigDecimal(200));
@@ -59,6 +68,9 @@ public class AccountResourceTest extends JerseyTest {
 		assertEquals("Should return status 201", Status.CREATED.getStatusCode(), output.getStatus());
 	}
 	
+	/*
+	 * IBAN = AE112233445501 already exist in DB so it will be successful
+	 * */
 	@Test
 	public void createFailedTest() {
 		Account account = new Account("AE112233445501", Long.valueOf(1), "AED", new BigDecimal(200));
@@ -67,6 +79,9 @@ public class AccountResourceTest extends JerseyTest {
 		assertEquals("Should return status 406 because IBAN already exist", Status.NOT_ACCEPTABLE.getStatusCode(), output.getStatus());
 	}
 
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void userAccoutListSuccessTest() {		
 		Response response = target("/accounts/user/1").request().get();
@@ -75,6 +90,9 @@ public class AccountResourceTest extends JerseyTest {
 		System.out.println(response.getStatus());
 	}
 	
+	/*
+	 * Dummy data inserted before test but not up till userId=110 so it will be successful
+	 * */
 	@Test
 	public void userAccoutListFailedTest(){		
 		Response response = target("/accounts/user/110").request().get();
@@ -83,6 +101,9 @@ public class AccountResourceTest extends JerseyTest {
 		assertEquals(0, accountList.length);
 	}
 	
+	/*
+	 * Dummy data inserted before test so it will be successful
+	 * */
 	@Test
 	public void getAllAccounts() {
 		Response response = target("/accounts").request().get();

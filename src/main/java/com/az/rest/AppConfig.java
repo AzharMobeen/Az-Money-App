@@ -17,6 +17,8 @@ public class AppConfig extends ResourceConfig {
 		packages("com.az.rest.resource");
 		register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
 				LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));		
+
+		// I'm doing dummy insertion to show some results.
 		DBManager.getInstance();
 	}
 }
